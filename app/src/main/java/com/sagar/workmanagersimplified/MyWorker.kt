@@ -1,11 +1,11 @@
 package com.sagar.workmanagersimplified
 
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.work.Data
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 
@@ -15,8 +15,11 @@ class MyWorker(
 ) : Worker(context, workerParameters) {
 
     override fun doWork(): Result {
-        displayNotification("Hey, I am is your work", "Work is finished")
-        return Result.success()
+
+        val desc = inputData.getString(MainActivity.EXTRA_TASK_DESC) ?: "empty data"
+        displayNotification("Hey, I am is your work", desc)
+        val outData = Data.Builder().putString(MainActivity.EXTRA_OUTPUT, "aaa").build()
+        return Result.success(outData)
     }
 
     private fun displayNotification(task: String, desc: String) {
